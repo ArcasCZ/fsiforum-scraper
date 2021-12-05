@@ -111,8 +111,6 @@ class Page:
                 ]
             ).rstrip()
             
-            title = re.sub(r"\.+", ".", title)
-            
             self.files.append(File(href, title))
 
             file_count += 1
