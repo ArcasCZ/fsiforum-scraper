@@ -26,6 +26,7 @@ There are more parameters you can add (before or after `--session`.
  - `--diff` works only with files you are missing
  - `--log` prints relative path and file URL into `log.txt`
  - `--text-only` log into `log.txt` without downloading (can be combined with `--diff`)
+ - `--no-skip` won't skip empty folders
 
 ## Known problems
 Files without extension are downloaded with `.file` extension 'cause on Windows it was probably the easiest way to fix conflicting file names with folder names.
