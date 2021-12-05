@@ -205,6 +205,7 @@ def main():
 
     index_page.download(arguments.diff, arguments.log, arguments.text_only)
     
-    log_file.close()
+    if log_file:
+        log_file.close()
 
     print("Downloading finished. Downloaded {} files.".format(file_count))
