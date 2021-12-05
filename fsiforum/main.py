@@ -78,9 +78,6 @@ class Page:
         for link in soup.select('tr[class*="dir"]'):
             size = link.find("td", {"class": "size"}).text
 
-            if size == "0 soubory":
-                continue
-
             data = link.find("td", {"class": "name"}).find("a")
             href = data.get("href").replace("index.php?dir=", "").replace("%2F", "/")
             title = "".join(
@@ -91,7 +88,9 @@ class Page:
                 ]
             ).rstrip()
 
-            title = re.sub(r"\.+", ".", title)
+            if size == "0 soubory":
+                print("Skipping empty folder: {}".format(os.path.join(self.path, title)))
+                continue
 
             self.pages.append(Page(href, os.path.join(self.path, title)))
             page_count += 1
@@ -111,6 +110,9 @@ class Page:
                     or c == "_"
                 ]
             ).rstrip()
+            
+            title = re.sub(r"\.+", ".", title)
+            
             self.files.append(File(href, title))
 
             file_count += 1
@@ -128,7 +130,7 @@ class Page:
             file_path = os.path.join(self.path, file.name)
             file_path = file_path.replace(" .", ".")
 
-            if diff and os.path.exists(file_path):
+            if diff and os.path.isfile(file_path):
                 continue
             
             if not text_only:
