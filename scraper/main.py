@@ -205,6 +205,3 @@ def main():
     index_page.download(arguments.diff, arguments.log, arguments.text_only)
 
     print("Downloading finished. Downloaded {} files.".format(file_count))
-
-
-main()
