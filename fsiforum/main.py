@@ -3,6 +3,8 @@ import os
 import re
 import argparse
 
+from pathlib import Path
+from urllib.parse import quote, unquote
 from urllib.request import urlretrieve
 
 # PIP LIBS
@@ -49,20 +51,14 @@ class File:
 class Page:
     def __init__(self, url, path):
         self.url = url
-        self.path = path
+        self.path = path.replace(" .", ".")
         self.pages = []
         self.files = []
 
-    def scrape(self):
-        if self.url != "":
-            params = (("dir", self.url),)
-        else:
-            params = ()
-
+    def scrape(self, no_skip):
         response = requests.get(
-            "http://fsiforum.cz/upload/index.php",
+            "http://fsiforum.cz/upload/index.php?dir={}".format(self.url),
             headers=HEADERS,
-            params=params,
             cookies=COOKIES,
             verify=False,
         ).content
@@ -79,7 +75,7 @@ class Page:
             size = link.find("td", {"class": "size"}).text
 
             data = link.find("td", {"class": "name"}).find("a")
-            href = data.get("href").replace("index.php?dir=", "").replace("%2F", "/")
+            href = data.get("href").replace("index.php?dir=", "")
             title = "".join(
                 [
                     c
@@ -88,7 +84,7 @@ class Page:
                 ]
             ).rstrip()
 
-            if size == "0 soubory":
+            if not no_skip and size == "0 soubory":
                 print("Skipping empty folder: {}".format(os.path.join(self.path, title)))
                 continue
 
@@ -115,14 +111,16 @@ class Page:
 
             file_count += 1
 
-        # print("Scraped: {}, found {} pages and {} files".format(self.url, len(self.pages), len(self.files)))
-
         for page in self.pages:
-            page.scrape()
+            page.scrape(no_skip)
 
     def download(self, diff, log, text_only):
         global log_file
         global transfered
+        
+        if not text_only and len(self.files) > 0:
+            path = Path(self.path)
+            path.mkdir(parents=True, exist_ok=True)
 
         for file in self.files:
             file_path = os.path.join(self.path, file.name)
@@ -130,24 +128,15 @@ class Page:
 
             if diff and os.path.isfile(file_path):
                 continue
-            
-            if not text_only:
-                path_parts = self.path.split("/")
-                create_path = ""
 
-                for part in path_parts:
-                    create_path = os.path.join(create_path, part)
-
-                    if not os.path.exists(create_path):
-                        os.makedirs(create_path, exist_ok=True)
 
             if log or text_only:
                 log_file.write('"{url}" "{path}"\n'.format(url=file.url, path=file_path))
 
             if not text_only:
-                print("saving {} to {}".format(file.name, os.path.abspath(file_path)))
+                print("saving {}".format(os.path.abspath(file_path)))
                 try:
-                    urlretrieve("http://fsiforum.cz/upload/" + file.url, file_path)
+                    urlretrieve("http://fsiforum.cz/upload/" + quote(unquote(file.url)), file_path)
                     transfered += os.path.getsize(file_path)
                 except Exception as e:
                     print("Download for file {} failed: {}".format(file_path, e))
@@ -169,6 +158,7 @@ def main():
     parser.add_argument("--log", action="store_true", dest="log")
     parser.add_argument("--text-only", action="store_true", dest="text_only")
     parser.add_argument("--session", action="store", dest="session")
+    parser.add_argument("--no-skip", action="store", dest="no_skip")
 
     arguments = parser.parse_args()
 
@@ -192,7 +182,7 @@ def main():
         return 1
 
     index_page = Page("", path)
-    index_page.scrape()
+    index_page.scrape(arguments.no_skip)
 
     print("Scraping done. Found {} pages and {} files".format(page_count, file_count))
 
