@@ -25,4 +25,4 @@ There are more parameters you can add (before or after `--session`.
  - `--stats` only shows, how many folders and files are there and then ends
  - `--diff` works only with files you are missing
  - `--log` prints relative path and file URL into `log.txt`
- - `--text-only` only files into `log.txt` without downloading (can be combined with `--diff`)
+ - `--text-only` log into `log.txt` without downloading (can be combined with `--diff`)
