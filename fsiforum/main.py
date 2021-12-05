@@ -130,15 +130,16 @@ class Page:
 
             if diff and os.path.exists(file_path):
                 continue
+            
+            if not text_only:
+                path_parts = self.path.split("/")
+                create_path = ""
 
-            path_parts = self.path.split("/")
-            create_path = ""
+                for part in path_parts:
+                    create_path = os.path.join(create_path, part)
 
-            for part in path_parts:
-                create_path = os.path.join(create_path, part)
-
-                if not os.path.exists(create_path):
-                    os.makedirs(create_path, exist_ok=True)
+                    if not os.path.exists(create_path):
+                        os.makedirs(create_path, exist_ok=True)
 
             if log or text_only:
                 log_file.write('"{url}" "{path}"'.format(url=file.url, path=file_path))
