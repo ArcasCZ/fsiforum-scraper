@@ -128,7 +128,7 @@ class Page:
             file_path = os.path.join(self.path, file.name)
             file_path = file_path.replace(" .", ".")
 
-            if os.path.exists(file_path) and diff:
+            if diff and os.path.exists(file_path):
                 continue
 
             path_parts = self.path.split("/")
@@ -179,7 +179,18 @@ def main():
         print("Missing paramater --session")
         return 1
 
-    index_page = Page("", os.path.join(".", "index"))
+    path = os.path.join(".", "index")
+
+    if (
+        not arguments.diff
+        and not arguments.stats
+        and not arguments.text_only
+        and os.path.exists(path)
+    ):
+        print("There's already 'index' folder. Delete it or use --diff.")
+        return 1
+
+    index_page = Page("", path)
     index_page.scrape()
 
     print("Scraping done. Found {} pages and {} files".format(page_count, file_count))
