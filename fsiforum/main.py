@@ -152,7 +152,7 @@ class Page:
                 except Exception as e:
                     print("Download for file {} failed: {}".format(file_path, e))
             else:
-                print("Logged {}".format(file_path))
+                print("Logged file {}".format(file_path))
 
         for page in self.pages:
             page.download(diff, log, text_only)
@@ -201,7 +201,7 @@ def main():
 
     if arguments.log or arguments.text_only:
         global log_file
-        log_file = open("log.txt", "w")
+        log_file = open("log.txt", "w", encoding="utf-8")
 
     index_page.download(arguments.diff, arguments.log, arguments.text_only)
     

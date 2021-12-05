@@ -28,3 +28,7 @@ There are more parameters you can add (before or after `--session`.
  - `--text-only` log into `log.txt` without downloading (can be combined with `--diff`)
 
 ## Known problems
+Files without extension are downloaded with `.file` extension 'cause on Windows it was probably the easiest way to fix conflicting file names with folder names.
+
+```Some characters could not be decoded, and were replaced with REPLACEMENT CHARACTER```
+This has to do something with lack of any order in naming files uploaded to FSI forum. It seems that it causes no harm, so i decided to ignore it.
