@@ -155,7 +155,7 @@ class Page:
                 print("Logged {}".format(file_path))
 
         for page in self.pages:
-            page.download()
+            page.download(diff, log, text_only)
 
     def __str__(self):
         return f'<class="Page" url="{self.url}" path="{self.path}" pages="{self.pages}" files="{self.files}">'
