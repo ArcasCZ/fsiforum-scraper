@@ -142,7 +142,7 @@ class Page:
                         os.makedirs(create_path, exist_ok=True)
 
             if log or text_only:
-                log_file.write('"{url}" "{path}"'.format(url=file.url, path=file_path))
+                log_file.write('"{url}" "{path}\n"'.format(url=file.url, path=file_path))
 
             if not text_only:
                 print("saving {} to {}".format(file.name, os.path.abspath(file_path)))
