@@ -2,7 +2,7 @@
 Little script for downloading materials from File Thingie at FSI Forum.
 
 ## Instalation
-You have to have installed Python 3.8 or newer. 
+You have to have installed Python 3.8 or newer and git.
 
 Instalation is pretty simple.
 
@@ -26,3 +26,5 @@ There are more parameters you can add (before or after `--session`.
  - `--diff` works only with files you are missing
  - `--log` prints relative path and file URL into `log.txt`
  - `--text-only` log into `log.txt` without downloading (can be combined with `--diff`)
+
+## Known problems
